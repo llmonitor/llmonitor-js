@@ -3,7 +3,7 @@ import {
   generateUUID,
   getFunctionInput,
   lunary_default
-} from "./chunk-KJ6SSTH5.js";
+} from "./chunk-AX3726TK.js";
 import {
   __name
 } from "./chunk-AGSXOS4O.js";
@@ -56,9 +56,11 @@ var BackendMonitor = class extends lunary_default {
   wrap(type, func, params) {
     const lunary2 = this;
     const wrappedFn = /* @__PURE__ */ __name((...args) => {
+      const runId2 = generateUUID();
       const callInfo = {
         type,
         func,
+        runId: runId2,
         args,
         params
       };
@@ -69,6 +71,9 @@ var BackendMonitor = class extends lunary_default {
               target,
               next: lunary2.executeWrappedFunction.bind(lunary2)
             });
+          }
+          if (prop === "runId") {
+            return target.runId;
           }
           if (prop === "setParent") {
             return chainable_default.setParent.bind({
@@ -94,8 +99,7 @@ var BackendMonitor = class extends lunary_default {
   }
   // Extract the actual execution logic into a function
   async executeWrappedFunction(target) {
-    const { type, args, func, params: properties } = target;
-    const runId2 = generateUUID();
+    const { runId: runId2, type, args, func, params: properties } = target;
     const name = properties?.nameParser ? properties.nameParser(...args) : properties?.name ?? func.name;
     const {
       inputParser,
@@ -225,7 +229,7 @@ var BackendMonitor = class extends lunary_default {
     try {
       const url = `${this.apiUrl}/v1/runs/${runId2}/score`;
       const headers = {
-        Authorization: `Bearer ${this.publicKey}`,
+        Authorization: `Bearer ${this.privateKey || this.publicKey}`,
         "Content-Type": "application/json"
       };
       const data = {

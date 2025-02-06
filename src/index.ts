@@ -18,10 +18,14 @@ class BackendMonitor extends Lunary {
     const lunary = this
 
     const wrappedFn = (...args: Parameters<T>) => {
+      // Generate a random ID for this run (will be injected into the context)
+      const runId = generateUUID()
+
       // Don't pass the function directly to proxy to avoid it being called directly
       const callInfo = {
         type,
         func,
+        runId,
         args,
         params,
       }
@@ -33,6 +37,10 @@ class BackendMonitor extends Lunary {
               target,
               next: lunary.executeWrappedFunction.bind(lunary),
             })
+          }
+
+          if (prop === "runId") {
+            return target.runId
           }
 
           if (prop === "setParent") {
@@ -67,10 +75,7 @@ class BackendMonitor extends Lunary {
 
   // Extract the actual execution logic into a function
   private async executeWrappedFunction<T extends WrappableFn>(target) {
-    const { type, args, func, params: properties } = target
-
-    // Generate a random ID for this run (will be injected into the context)
-    const runId = generateUUID()
+    const { runId, type, args, func, params: properties } = target
 
     // Get agent name from function name or params
     const name = properties?.nameParser
@@ -270,7 +275,7 @@ class BackendMonitor extends Lunary {
     try {
       const url = `${this.apiUrl}/v1/runs/${runId}/score`
       const headers = {
-        Authorization: `Bearer ${this.publicKey}`,
+        Authorization: `Bearer ${this.privateKey || this.publicKey}`,
         "Content-Type": "application/json",
       }
 

@@ -11,6 +11,7 @@ export type cJSON =
 export interface LunaryOptions {
   appId?: string // deprecated
   publicKey?: string
+  privateKey?: string
   apiUrl?: string
   verbose?: boolean
   runtime?: string
@@ -137,13 +138,16 @@ export type Identify<T extends WrappableFn> = (
 export type SetParent<T extends WrappableFn> = (
   runId: string
 ) => WrappedReturn<T>
+// types.ts
 
-export type WrappedReturn<T extends WrappableFn> = ReturnType<T> & {
+export type WrappedReturn<T extends WrappableFn> = Promise<
+  Awaited<ReturnType<T>>
+> & {
+  runId: string
   identify: Identify<T>
   setParent: SetParent<T>
 }
 
-// Create a type for the function returning that promise
 export type WrappedFn<T extends WrappableFn> = (
   ...args: Parameters<T>
 ) => WrappedReturn<T>

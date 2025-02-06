@@ -4,6 +4,7 @@ type cJSON = string | number | boolean | null | undefined | {
 interface LunaryOptions {
     appId?: string;
     publicKey?: string;
+    privateKey?: string;
     apiUrl?: string;
     verbose?: boolean;
     runtime?: string;
@@ -90,7 +91,8 @@ type WrapParams<T extends WrappableFn> = {
 type WrappableFn = (...args: any[]) => any;
 type Identify<T extends WrappableFn> = (userId: string, userProps?: cJSON) => WrappedReturn<T>;
 type SetParent<T extends WrappableFn> = (runId: string) => WrappedReturn<T>;
-type WrappedReturn<T extends WrappableFn> = ReturnType<T> & {
+type WrappedReturn<T extends WrappableFn> = Promise<Awaited<ReturnType<T>>> & {
+    runId: string;
     identify: Identify<T>;
     setParent: SetParent<T>;
 };

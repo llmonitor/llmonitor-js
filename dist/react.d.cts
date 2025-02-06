@@ -1,6 +1,6 @@
 import { cJSON } from './types.cjs';
 import lunary from './browser.cjs';
-import { T as Thread } from './lunary-CgRCYto_.js';
+import { T as Thread } from './lunary-vM5p-WW-.js';
 
 declare function useChatMonitor(): {
     restart: () => Thread;

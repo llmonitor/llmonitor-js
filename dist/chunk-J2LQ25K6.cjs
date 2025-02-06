@@ -3,7 +3,7 @@
 
 
 
-var _chunkM7VRZYX6cjs = require('./chunk-M7VRZYX6.cjs');
+var _chunkICOI2EVKcjs = require('./chunk-ICOI2EVK.cjs');
 
 
 var _chunkEC6JY3PVcjs = require('./chunk-EC6JY3PV.cjs');
@@ -49,16 +49,18 @@ var chainable_default = {
 };
 
 // src/index.ts
-var BackendMonitor = class extends _chunkM7VRZYX6cjs.lunary_default {
+var BackendMonitor = class extends _chunkICOI2EVKcjs.lunary_default {
   static {
     _chunkEC6JY3PVcjs.__name.call(void 0, this, "BackendMonitor");
   }
   wrap(type, func, params) {
     const lunary2 = this;
     const wrappedFn = /* @__PURE__ */ _chunkEC6JY3PVcjs.__name.call(void 0, (...args) => {
+      const runId2 = _chunkICOI2EVKcjs.generateUUID.call(void 0, );
       const callInfo = {
         type,
         func,
+        runId: runId2,
         args,
         params
       };
@@ -69,6 +71,9 @@ var BackendMonitor = class extends _chunkM7VRZYX6cjs.lunary_default {
               target,
               next: lunary2.executeWrappedFunction.bind(lunary2)
             });
+          }
+          if (prop === "runId") {
+            return target.runId;
           }
           if (prop === "setParent") {
             return chainable_default.setParent.bind({
@@ -94,8 +99,7 @@ var BackendMonitor = class extends _chunkM7VRZYX6cjs.lunary_default {
   }
   // Extract the actual execution logic into a function
   async executeWrappedFunction(target) {
-    const { type, args, func, params: properties } = target;
-    const runId2 = _chunkM7VRZYX6cjs.generateUUID.call(void 0, );
+    const { runId: runId2, type, args, func, params: properties } = target;
     const name = _optionalChain([properties, 'optionalAccess', _ => _.nameParser]) ? properties.nameParser(...args) : _nullishCoalesce(_optionalChain([properties, 'optionalAccess', _2 => _2.name]), () => ( func.name));
     const {
       inputParser,
@@ -118,7 +122,7 @@ var BackendMonitor = class extends _chunkM7VRZYX6cjs.lunary_default {
     const userIdData = _optionalChain([properties, 'optionalAccess', _6 => _6.userIdParser]) ? properties.userIdParser(...args) : userId;
     const userPropsData = _optionalChain([properties, 'optionalAccess', _7 => _7.userPropsParser]) ? properties.userPropsParser(...args) : userProps;
     const templateId = _optionalChain([properties, 'optionalAccess', _8 => _8.templateParser]) ? properties.templateParser(...args) : templateParser;
-    const input = inputParser ? inputParser(...args) : _chunkM7VRZYX6cjs.getFunctionInput.call(void 0, func, args);
+    const input = inputParser ? inputParser(...args) : _chunkICOI2EVKcjs.getFunctionInput.call(void 0, func, args);
     if (track !== false) {
       this.trackEvent(type, "start", {
         runId: runId2,
@@ -164,7 +168,7 @@ var BackendMonitor = class extends _chunkM7VRZYX6cjs.lunary_default {
       if (track !== false) {
         this.trackEvent(type, "error", {
           runId: runId2,
-          error: _chunkM7VRZYX6cjs.cleanError.call(void 0, error)
+          error: _chunkICOI2EVKcjs.cleanError.call(void 0, error)
         });
         await this.processQueue();
       }
@@ -225,7 +229,7 @@ var BackendMonitor = class extends _chunkM7VRZYX6cjs.lunary_default {
     try {
       const url = `${this.apiUrl}/v1/runs/${runId2}/score`;
       const headers = {
-        Authorization: `Bearer ${this.publicKey}`,
+        Authorization: `Bearer ${this.privateKey || this.publicKey}`,
         "Content-Type": "application/json"
       };
       const data = {

@@ -1,10 +1,10 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }
 
-var _chunkG3EPQG6Wcjs = require('./chunk-G3EPQG6W.cjs');
+var _chunkJ2LQ25K6cjs = require('./chunk-J2LQ25K6.cjs');
 
 
 
-var _chunkM7VRZYX6cjs = require('./chunk-M7VRZYX6.cjs');
+var _chunkICOI2EVKcjs = require('./chunk-ICOI2EVK.cjs');
 
 
 var _chunkEC6JY3PVcjs = require('./chunk-EC6JY3PV.cjs');
@@ -120,7 +120,7 @@ function monitorOpenAI(openai, params = {}) {
     }
   }
   _chunkEC6JY3PVcjs.__name.call(void 0, handleStream, "handleStream");
-  const wrapped = _chunkG3EPQG6Wcjs.src_default.wrapModel(wrappedCreateChatCompletion, {
+  const wrapped = _chunkJ2LQ25K6cjs.src_default.wrapModel(wrappedCreateChatCompletion, {
     nameParser: (request) => request.model,
     inputParser: (request) => request.messages.map(parseOpenaiMessage),
     paramsParser: (request) => {
@@ -129,7 +129,7 @@ function monitorOpenAI(openai, params = {}) {
         if (request[param])
           rawExtra[param] = request[param];
       }
-      return _chunkM7VRZYX6cjs.cleanExtra.call(void 0, rawExtra);
+      return _chunkICOI2EVKcjs.cleanExtra.call(void 0, rawExtra);
     },
     metadataParser(request) {
       return request.metadata;
@@ -160,7 +160,7 @@ function monitorOpenAI(openai, params = {}) {
     },
     enableWaitUntil: (request) => !!request.stream,
     waitUntil: (stream, onComplete, onError) => {
-      const [og, copy] = _chunkM7VRZYX6cjs.teeAsync.call(void 0, stream);
+      const [og, copy] = _chunkICOI2EVKcjs.teeAsync.call(void 0, stream);
       handleStream(copy, onComplete, onError);
       return og;
     },

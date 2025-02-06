@@ -69,6 +69,7 @@ declare class Thread {
 
 declare class Lunary {
     publicKey?: string;
+    privateKey?: string;
     verbose?: boolean;
     apiUrl?: string;
     ctx?: any;
@@ -81,7 +82,7 @@ declare class Lunary {
      * @param {LunaryOptions} options
      */
     constructor(ctx?: any);
-    init({ appId, publicKey, verbose, apiUrl, runtime }?: LunaryOptions): void;
+    init({ appId, publicKey, privateKey, verbose, apiUrl, runtime, }?: LunaryOptions): void;
     /**
      * Manually track a run event.
      * @param {RunType} type - The type of the run.

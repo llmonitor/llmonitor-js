@@ -25,6 +25,7 @@ const MAX_CHUNK_SIZE = 20
 
 class Lunary {
   publicKey?: string
+  privateKey?: string
   verbose?: boolean
   apiUrl?: string
   ctx?: any
@@ -41,11 +42,12 @@ class Lunary {
    */
   constructor(ctx?) {
     this.init({
-      appId:
+      publicKey:
         checkEnv("LUNARY_PRIVATE_KEY") ||
         checkEnv("LUNARY_PUBLIC_KEY") ||
         checkEnv("LUNARY_APP_ID") ||
         checkEnv("LLMONITOR_APP_ID"),
+      privateKey: checkEnv("LUNARY_PRIVATE_KEY"),
       apiUrl:
         checkEnv("LUNARY_API_URL") ||
         checkEnv("LLMONITOR_API_URL") ||
@@ -57,9 +59,17 @@ class Lunary {
     this.ctx = ctx
   }
 
-  init({ appId, publicKey, verbose, apiUrl, runtime }: LunaryOptions = {}) {
+  init({
+    appId,
+    publicKey,
+    privateKey,
+    verbose,
+    apiUrl,
+    runtime,
+  }: LunaryOptions = {}) {
     if (appId) this.publicKey = appId
     if (publicKey) this.publicKey = publicKey
+    if (privateKey) this.privateKey = privateKey
     if (verbose) this.verbose = verbose
     if (apiUrl) this.apiUrl = apiUrl
     if (runtime) this.runtime = runtime
@@ -150,7 +160,7 @@ class Lunary {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + this.publicKey,
+          Authorization: "Bearer " + (this.privateKey || this.publicKey),
         },
         body: JSON.stringify({ events: copy }),
       })
@@ -181,7 +191,7 @@ class Lunary {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + this.publicKey,
+          Authorization: "Bearer " + (this.privateKey || this.publicKey),
         },
       })
 
@@ -217,7 +227,7 @@ class Lunary {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + this.publicKey,
+          Authorization: "Bearer " + (this.privateKey || this.publicKey),
         },
       }
     )
@@ -302,7 +312,7 @@ class Lunary {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + this.publicKey,
+        Authorization: "Bearer " + (this.privateKey || this.publicKey),
       },
     })
 
